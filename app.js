@@ -1,3 +1,5 @@
+//npm install
+//npm install --save mysql2
 const path = require('path');
 
 const express = require('express');
