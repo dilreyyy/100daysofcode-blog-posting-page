@@ -52,7 +52,7 @@ router.post('/posts', async function(req, res){
     res.redirect('/posts');
 });
 
-router.get('/post/:post_id/edit', async function(req, res){
+router.get('/posts/:post_id/edit', async function(req, res){
     const query = `
     SELECT posts.* FROM posts
     WHERE posts.post_id = ?
@@ -95,6 +95,11 @@ router.get('/view-post/:post_id', async function(req, res){
     }
 
     res.render('post-detail', {post: postsData});
+});
+
+router.post('/posts/:post_id/delete', async function(req, res){
+    await db.query('DELETE FROM posts WHERE post_id = ?', [req.params.post_id]);
+    res.redirect('/posts');
 });
 
 module.exports = router;

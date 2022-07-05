@@ -3,8 +3,10 @@
   <h3><%= post.post_summary %></h3>
   <p class="post-item-author">By <%= post.author_name %></p>
   <div class="post-actions">
-    <button class="btn btn-alt">Delete Post</button>
-    <a href="/post/<%= post.post_id %>/edit">Edit Post</a>
+    <form action="/posts/<%= post.post_id %>/delete" method="POST">
+      <button class="btn btn-alt">Delete Post</button>
+    </form>
+    <a href="/posts/<%= post.post_id %>/edit">Edit Post</a>
     <a class="btn" href="/view-post/<%= post.post_id %>">View Post</a>
   </div>
 </article>
