@@ -13,6 +13,27 @@ router.get('/posts', async function(req, res){
     res.render('posts-list', {posts: posts});
 });
 
+router.post('/posts/:post_id/edit', async function(req, res){
+
+    const query = `
+        UPDATE posts 
+        SET post_title = ?,
+        post_summary = ?,
+        post_body = ?
+        WHERE post_id = ?
+    `;
+
+    await db.query(query,[
+        req.body.post_title,
+        req.body.post_summary,
+        req.body.post_content,
+        req.params.post_id
+    ]);
+
+    res.redirect('/posts');
+});
+
+
 router.get('/new-post', async function(req, res){
     const [authors] = await db.query('SELECT * FROM authors;');
     res.render('create-post', {authors: authors});
@@ -31,6 +52,23 @@ router.post('/posts', async function(req, res){
     res.redirect('/posts');
 });
 
+router.get('/post/:post_id/edit', async function(req, res){
+    const query = `
+    SELECT posts.* FROM posts
+    WHERE posts.post_id = ?
+    `;
+
+    const [posts] = await db.query(query, [req.params.post_id]);
+    
+    if(!posts || posts.length === 0){
+        return res.status(400).render('404');
+    }
+
+    res.render('update-post', {post: posts[0]})
+});
+
+router.get('/')
+
 router.get('/view-post/:post_id', async function(req, res){
     
     const query = `
@@ -41,7 +79,22 @@ router.get('/view-post/:post_id', async function(req, res){
     
     const [posts] = await db.query(query, req.params.post_id);
     
-    res.render('post-detail', {post: posts[0]});
+    if(!posts || posts.length === 0){
+        return res.status(400).render('404');
+    }
+
+    const postsData = {
+        ...posts[0],
+        post_date: posts[0].post_date.toISOString(),
+        post_readable_date: posts[0].post_date.toLocaleDateString('en-US',{
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
+        })
+    }
+
+    res.render('post-detail', {post: postsData});
 });
 
 module.exports = router;
