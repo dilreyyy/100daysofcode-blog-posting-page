@@ -10,7 +10,16 @@
   <%- include('includes/header') %>
   <main id="all-posts">
     <h1>All Posts</h1>
-   
+    <% if (!posts || posts.length === 0) { %>
+      <h1>We could not found any posts - start <a href="/new-post" class="btn-alt">creating new post</a></h1>
+    <% } %>
+    <ul id="posts-list">
+      <% for (const post of posts) { %>
+      <li>
+        <%- include('includes/post-item', {post: post}) %>
+      </li>
+      <% } %>
+    </ul>
   </main> 
 </body>
 
